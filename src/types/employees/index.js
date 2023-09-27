@@ -1,4 +1,4 @@
-function employees(id){
+export function employees(id){
     let employee = ''
     switch(id){
         case 1: 
@@ -46,5 +46,4 @@ function employees(id){
     return employee
 }
 
-module.exports = { employees }
 

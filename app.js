@@ -1,4 +1,4 @@
-const {service} = require('./src/service/handleTimesheet.js')
+import {service} from './src/service/handleTimesheet.js'
 
 
 async function main(){
