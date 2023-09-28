@@ -10,12 +10,12 @@ export async function service() {
     const result = await axios.post('https://0cc11e24125303.au.deputy.com/api/v1/resource/Timesheet/QUERY', params, {
         headers: {
             'Content-Type': "application/json",
-            'Authorization' : 'Bearer 9826398cfe56b0718cd467dc5039ed33'
+            'Authorization' : 'Bearer d41e466718910dcde8a256a4644fbe35'
         },
     })
     .then(async result => {
         const timesheetArrayData = handleDataProcessing(result.data)
-        console.log('here>>>>>', timesheetArrayData)
+        fileToCsv(timesheetArrayData)
     })
     .catch(err => {
         console.log('Error: ', err.message);
