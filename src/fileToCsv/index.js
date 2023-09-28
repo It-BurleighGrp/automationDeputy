@@ -2,10 +2,14 @@ import dayjs from 'dayjs'
 import fs from 'fs'
 import {sendMail} from '../mailer/index.js'
 
+const emailNames = []
+
+
 function appendCsv(employeeName, date, referenceDate, csvString, discarded){
     if(dayjs(date) >= referenceDate && discarded === null){
         try{
             fs.appendFileSync(`./csv/${employeeName}.csv`, csvString)
+            emailNames.push(employeeName)
         } catch(error){
             console.log(error)
         }
@@ -75,5 +79,10 @@ export function fileToCsv(arrayTimesheet){
         }
         
     })
-    sendMail()
+
+    const uniqueEmployeeNames = new Set(emailNames)
+
+    uniqueEmployeeNames.forEach((name) =>{
+        sendMail(name)
+    })
 }
