@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import fs from 'fs'
+import {sendMail} from '../mailer/index.js'
 
 function appendCsv(employeeName, date, referenceDate, csvString, discarded){
     if(dayjs(date) >= referenceDate && discarded === null){
@@ -74,7 +75,5 @@ export function fileToCsv(arrayTimesheet){
         }
         
     })
-
-    console.log('teste aqui>>>>')
-    
+    sendMail()
 }

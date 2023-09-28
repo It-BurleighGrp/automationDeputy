@@ -1,20 +1,27 @@
 import nodemailer from 'nodemailer'
 
 
-export async function sendMail(){
+export function sendMail(){
     const transport = nodemailer.createTransport({
-        host: '',
-        port: 0,
-        secure: false,
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: {
-            user: '',
-            pass:'',
+            user: 'it@burleighgrp.com',
+            pass:'ItBurleighGrp2023*#',
         }
     })
     
    transport.sendMail({
-     from: '',
-     to: '',
-     subject: '',
-   }) 
+     from: 'it@burleighgrp.com',
+     to: 'isadora@burleighgrp.com',
+     subject: 'testezinho da massa',
+     text: 'O testezinho da massa chegou trazendo pasta',
+     attachments: {
+        filename: 'Isadora.csv',
+        path: './csv/Isadora.csv'
+     }
+   })
+   .then(() => console.log('Email enviado com sucesso!'))
+   .catch((err) => console.log('Erro ao enviar email: ', err))
 }
