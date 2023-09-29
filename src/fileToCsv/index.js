@@ -85,9 +85,15 @@ export function fileToCsv(arrayTimesheet){
 
     const uniqueEmployeeNames = new Set(emailNames)
 
-    console.log('aqui', process.env.USER_KEY)
-
-    /* uniqueEmployeeNames.forEach((name) =>{
-        sendMail(name)
-    }) */
+    uniqueEmployeeNames.forEach((name) => {
+        if(process.argv[2] === 'exception'){
+            if(name === 'Melissa'){
+                sendMail(name)
+                return 
+            }
+        }
+        if(!process.argv[2] && name !== 'Melissa'){
+            sendMail(name)
+        }
+    })
 }
