@@ -2,15 +2,15 @@
 import {handleDataProcessing} from '../reader/index.js'
 import axios from 'axios'
 import {fileToCsv} from '../fileToCsv/index.js'
+import 'dotenv/config'
 
 
 export async function service() {
-    console.log('tá batendo aqui')
     const params = {}
-    const result = await axios.post('https://0cc11e24125303.au.deputy.com/api/v1/resource/Timesheet/QUERY', params, {
+    await axios.post(`${process.env.ENDPOINT}`, params, {
         headers: {
             'Content-Type': "application/json",
-            'Authorization' : 'Bearer d41e466718910dcde8a256a4644fbe35'
+            'Authorization' : `Bearer ${process.env.DEPUTY_TOKEN}`
         },
     })
     .then(async result => {

@@ -1,9 +1,9 @@
 import dayjs from 'dayjs'
 import fs from 'fs'
+import 'dotenv/config'
 import {sendMail} from '../mailer/index.js'
 
 const emailNames = []
-
 
 function appendCsv(employeeName, date, referenceDate, csvString, discarded){
     if(dayjs(date) >= referenceDate && discarded === null){
@@ -73,16 +73,21 @@ export function fileToCsv(arrayTimesheet){
             const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
             appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
         }
+
         if(timesheet.Employee!=='IT'&&timesheet.Employee!=='Isadora'&&timesheet.Employee!=='Giovanna'){
             const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv('allEmployees', timesheet.ReferenceDate, auxReferenceDate, csvInfo)
+            appendCsv('allEmployees', timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
         }
         
     })
 
+    emailNames.push('allEmployees')
+
     const uniqueEmployeeNames = new Set(emailNames)
 
-    uniqueEmployeeNames.forEach((name) =>{
+    console.log('aqui', process.env.USER_KEY)
+
+    /* uniqueEmployeeNames.forEach((name) =>{
         sendMail(name)
-    })
+    }) */
 }

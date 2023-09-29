@@ -1,52 +1,54 @@
 import nodemailer from 'nodemailer'
-
+import 'dotenv/config'
 
 function handleGetEmail(name){
     switch(name){
         case 'Isadora':
-            return 'isadora@burleighgrp.com'
+            return 'isadora@flockdgrp.com.au'
         case 'Giovanna':
             return 'giovanna@flockdgrp.com'
         case 'Asami':
-            return 'it@burleighgrp.com'
+            return 'asha.bgrp@gmail.com'
         case 'Isadora':
-            return 'isadora@burleighgrp.com'
+            return 'isadora@flockdgrp.com.au'
         case 'Jackie':
-            return 'isadora@burleighgrp.com'
+            return 'jade.bgrp@gmail.com'
         case 'Jade':
-            return 'isadora@burleighgrp.com'
+            return 'jaen.bgrp@gmail.com'
         case 'Karmen':
-            return 'isadora@burleighgrp.com'
+            return 'kawa.bgrp@gmail.com'
         case 'Rachel':
-            return 'isadora@burleighgrp.com'
+            return 'racu.bgrp@gmail.com'
         case 'Shiho':
-            return 'isadora@burleighgrp.com'
+            return 'shko.bgrp@gmail.com'
         case 'Ana Carolina':
-            return 'isadora@burleighgrp.com'
+            return 'anca.bgrp@gmail.com'
         case 'Melissa':
-            return 'isadora@burleighgrp.com'
+            return 'meco.bgrp@gmail.com'
         case 'Nathalia':
-            return 'isadora@burleighgrp.com'
+            return 'nasa.bgrp@gmail.com'
         case 'Danielle':
-            return 'isadora@burleighgrp.com'
-        default:
-            return 'isadora@burleighgrp.com' 
+            return 'damo.bgrp@gmail.com'
+        case 'Dalila':
+            return 'daro.bgrp@gmail.com'
+        case 'allEmployees':
+            return 'asha.bgrp@gmail.com'
     }
 }
 
 export function sendMail(name){
     const transport = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
+        host: `${process.env.EMAIL_HOST}`,
+        port: process.env.EMAIL_PORT,
         secure: true,
         auth: {
-            user: 'it@burleighgrp.com',
-            pass:'ItBurleighGrp2023*#',
+            user: `${process.env.AUTH_USER}`,
+            pass:`${process.env.AUTH_PASSWORD}`,
         }
     })
     
    transport.sendMail({
-     from: 'it@burleighgrp.com',
+     from: `${process.env.EMAIL_FROM}`,
      to: handleGetEmail(name),
      subject: `Total hours - ${name}`,
      text: `Here is the total of hours of this week`,
@@ -56,5 +58,5 @@ export function sendMail(name){
      }
    })
    .then(() => console.log('Email enviado com sucesso!'))
-   .catch((err) => console.log('Erro ao enviar email: ', err))
+   .catch((err) => console.log(`Erro ao enviar email:${name}`, err))
 }
