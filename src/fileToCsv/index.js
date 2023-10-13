@@ -18,7 +18,7 @@ function appendCsv(employeeName, date, referenceDate, csvString, discarded){
 
 export function fileToCsv(arrayTimesheet){
     arrayTimesheet.filter((timesheet) => {
-        const auxReferenceDate = dayjs().subtract(1, 'w')
+        const auxReferenceDate = dayjs().subtract(8, 'd')
         if(timesheet.Employee === 'Isadora'){
             const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
             appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
@@ -92,7 +92,7 @@ export function fileToCsv(arrayTimesheet){
                 return 
             }
         }
-        if(!process.argv[2] && name !== 'Melissa'){
+        if(!process.argv[2] && name === 'allEmployees'){
             sendMail(name)
         }
     })

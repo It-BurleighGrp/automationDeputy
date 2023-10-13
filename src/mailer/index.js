@@ -32,7 +32,7 @@ function handleGetEmail(name){
         case 'Dalila':
             return 'daro.bgrp@gmail.com'
         case 'allEmployees':
-            return 'asha.bgrp@gmail.com'
+            return 'asami@flockdgrp.com'
     }
 }
 
@@ -49,7 +49,7 @@ export function sendMail(name){
     
    transport.sendMail({
      from: `${process.env.EMAIL_FROM}`,
-     to: handleGetEmail(name),
+     to: handleGetEmail(name) /*'isadora@flockdgrp.com'*/,
      subject: `Total hours - ${name}`,
      text: `Here is the total of hours of this week`,
      attachments: {
