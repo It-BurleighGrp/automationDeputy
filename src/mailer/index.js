@@ -32,11 +32,12 @@ function handleGetEmail(name){
         case 'Dalila':
             return 'daro.bgrp@gmail.com'
         case 'allEmployees':
-            return 'asha.bgrp@gmail.com'
+            return 'fay@flockdgrp.com.au'
     }
 }
 
 export function sendMail(name){
+    console.log('bateu aqui>>>', name)
     const transport = nodemailer.createTransport({
         host: `${process.env.EMAIL_HOST}`,
         port: process.env.EMAIL_PORT,
@@ -54,7 +55,7 @@ export function sendMail(name){
      text: `Here is the total of hours of this week`,
      attachments: {
         filename: `${name}.csv`,
-        path: `./csv/${name}.csv`
+        path: `./reports/${name}.csv`
      }
    })
    .then(() => console.log('Email enviado com sucesso!'))

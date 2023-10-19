@@ -1,91 +1,69 @@
 import dayjs from 'dayjs'
 import fs from 'fs'
 import 'dotenv/config'
+import {employeesToCSVInfo} from '../types/employees/index.js'
 import {sendMail} from '../mailer/index.js'
 
 const emailNames = []
+const employeeTotalTime = {};
+const employeeInfoAdded = {};
 
-function appendCsv(employeeName, date, referenceDate, csvString, discarded){
+function appendCsv(employeeName, date, referenceDate, csvString, discarded, totalTime){
     if(dayjs(date) >= referenceDate && discarded === null){
+        const filePath = `./reports/${employeeName}.csv`;
+        const csvHeader = `Name, Date, Start Time, End Time, Meal Break, Time, Total Time, Wages\n`
         try{
-            fs.appendFileSync(`./csv/${employeeName}.csv`, csvString)
+            if(!fs.existsSync(filePath)){
+                fs.appendFileSync(filePath, csvHeader)
+                employeeTotalTime[employeeName] = 0
+            }
+            fs.appendFileSync(filePath, csvString)
             emailNames.push(employeeName)
+            employeeTotalTime[employeeName] = employeeTotalTime[employeeName] + totalTime
         } catch(error){
             console.log(error)
         }
     }
 }
 
-export function fileToCsv(arrayTimesheet){
+export function fileToCsv(arrayTimesheet) {
     arrayTimesheet.filter((timesheet) => {
-        const auxReferenceDate = dayjs().subtract(1, 'w')
-        if(timesheet.Employee === 'Isadora'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
+        const auxReferenceDate = dayjs().subtract(8, 'd');
+        const employeeName = employeesToCSVInfo[timesheet.Employee];
+        console.log('employee name', employeeName)
+        const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`;
+        if(timesheet.TimeApproved === true){
+            appendCsv(employeeName, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded, timesheet.TotalTime);
+            appendCsv('allEmployees', timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded, timesheet.TotalTime);
         }
-        if(timesheet.Employee === 'Giovanna'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-           appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        if(timesheet.Employee === 'Asami'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        if(timesheet.Employee === 'Jackie'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        if(timesheet.Employee === 'Jade'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-           appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        if(timesheet.Employee === 'Karmen'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        if(timesheet.Employee === 'Rachel'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        if(timesheet.Employee === 'Shiho'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-           appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        if(timesheet.Employee === 'Ana Carolina'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-           appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        if(timesheet.Employee === 'Melissa'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        if(timesheet.Employee === 'Nathalia'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
+      });
+      console.log(emailNames)
 
-        if(timesheet.Employee === 'Danielle'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
+      emailNames.push('allEmployees')
+
+      arrayTimesheet.forEach((timesheet) => {
+        const totalTime = employeeTotalTime[timesheet.Employee];
+        const employeeName = employeesToCSVInfo[timesheet.Employee] || 'allEmployees';
+        const filePath = `./reports/${employeeName}.csv`;
+      
+        if (employeesToCSVInfo[timesheet.Employee] && !employeeInfoAdded[employeeName]) {
+           let csvInfo = ''; 
+          if(timesheet.Employee === 'Ana Carolina' || timesheet.Employee === 'Danielle' || timesheet.Employee === 'Dalila')  {
+            csvInfo = `, , , , , , ${parseFloat(totalTime).toFixed(2)}, ${parseFloat(totalTime * 26.73).toFixed(2)}\n`;
+          }
+            csvInfo = `, , , , , , ${parseFloat(totalTime).toFixed(2)}, - \n`;
+          if(totalTime){
+              fs.appendFileSync(filePath, csvInfo);
+              employeeInfoAdded[employeeName] = true;
+            }
         }
+      });
+      
+      const uniqueEmails = new Set(emailNames)
 
-        if(timesheet.Employee === 'Dalila'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv(timesheet.Employee, timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
+console.log(uniqueEmails)
 
-        if(timesheet.Employee!=='IT'&&timesheet.Employee!=='Isadora'&&timesheet.Employee!=='Giovanna'){
-            const csvInfo = `${timesheet.Employee}, ${timesheet.Date}, ${timesheet.StartTime}, ${timesheet.EndTime}, ${timesheet.MealBreak}, ${timesheet.TotalTime}\n`
-            appendCsv('allEmployees', timesheet.ReferenceDate, auxReferenceDate, csvInfo, timesheet.Discarded)
-        }
-        
-    })
-
-    emailNames.push('allEmployees')
-
-    const uniqueEmployeeNames = new Set(emailNames)
-
-    uniqueEmployeeNames.forEach((name) => {
+      /* uniqueEmails.forEach((name) => {
         if(process.argv[2] === 'exception'){
             if(name === 'Melissa'){
                 sendMail(name)
@@ -95,5 +73,5 @@ export function fileToCsv(arrayTimesheet){
         if(!process.argv[2] && name !== 'Melissa'){
             sendMail(name)
         }
-    })
+    }) */
 }

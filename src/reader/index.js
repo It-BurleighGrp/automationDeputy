@@ -13,7 +13,8 @@ export function handleDataProcessing(timesheetArray){
             MealBreak: String(timesheet.Mealbreak).split('T')[1].split('+')[0].split(':')[0].concat(':', String(timesheet.Mealbreak).split('T')[1].split('+')[0].split(':')[1]),
             TotalTime: timesheet.TotalTime,
             TimeApproved: timesheet.TimeApproved,
-            Discarded: timesheet.Discarded
+            Discarded: timesheet.Discarded,
+            IsInProgress: timesheet.IsInProgress
         })
     })
     return auxArray

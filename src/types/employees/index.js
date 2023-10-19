@@ -40,10 +40,26 @@ export function employees(id){
         case 14: 
             employee = 'Danielle'
             break
-        default:
+        case 15:
             employee = 'Dalila'
     }
     return employee
 }
 
 
+export const employeesToCSVInfo = {
+    'Isadora': 'Isadora',
+    'Giovanna': 'Giovanna',
+    'Asami': 'Asami',
+    'Jackie': 'Jackie',
+    'Jade': 'Jade',
+    'Karmen': 'Karmen',
+    'Rachel': 'Rachel',
+    'Shiho': 'Shiho',
+    'Ana Carolina': 'Ana Carolina',
+    'Melissa': 'Melissa',
+    'Nathalia': 'Nathalia',
+    'Danielle': 'Danielle',
+    'Dalila': 'Dalila',
+    'allEmployes': 'allEmployees'
+  };

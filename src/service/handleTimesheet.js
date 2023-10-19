@@ -3,6 +3,7 @@ import {handleDataProcessing} from '../reader/index.js'
 import axios from 'axios'
 import {fileToCsv} from '../fileToCsv/index.js'
 import 'dotenv/config'
+import fs from 'fs'
 
 
 export async function service() {
@@ -15,6 +16,7 @@ export async function service() {
     })
     .then(async result => {
         const timesheetArrayData = handleDataProcessing(result.data)
+        fs.mkdirSync('./reports');
         fileToCsv(timesheetArrayData)
     })
     .catch(err => {
